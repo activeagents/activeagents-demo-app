@@ -3,10 +3,9 @@ class SupportAgent < ApplicationAgent
   generate_with :openai, model: "gpt-4o-mini", instructions: "You're a support agent. You're job is to help users with their questions."
 
   after_generate :create_message 
+  after_generate :save_context
 
   before_action :load_context
-
-  after_generate :save_context
 
   on_stream :broadcast_message
   
@@ -27,8 +26,8 @@ class SupportAgent < ApplicationAgent
   end
 
   def save_context
-    # @chat.messages_from_context(context: prompt_context)
-    # @chat.save
+    @chat.messages_from_context(context: prompt_context)
+    @chat.save
   end
 
   def broadcast_message
