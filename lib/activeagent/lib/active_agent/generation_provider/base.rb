@@ -1,27 +1,40 @@
-# frozen_string_literal: true
+# lib/active_agent/generation_provider/base.rb
 
 module ActiveAgent
   module GenerationProvider
     class Base
-      attr_reader :agent
+      class GenerationProviderError < StandardError; end
+      attr_reader :client, :config, :prompt, :response
 
       def initialize(config)
         @config = config
+        @prompt = nil
+        @response = nil
       end
 
-      def generate(agent, stream: nil)
-        raise NotImplementedError, "Subclasses must implement the generate method"
+      def generate(prompt)
+        raise NotImplementedError, "Subclasses must implement the 'generate' method"
       end
 
-      def self.configure_provider(config)
-        require "active_agent/generation_provider/#{config['service'].underscore}_provider"
-        ActiveAgent::GenerationProvider.const_get("#{config['service'].camelize}Provider").new(config)
-      rescue LoadError
-        raise "Missing generation provider for #{config['service'].inspect}"
+      private
+
+      def handle_response(response)
+        @response = ActiveAgent::GenerationProvider::Response.new(message:, raw_response: response)
+        raise NotImplementedError, "Subclasses must implement the 'handle_response' method"
       end
 
-      def response_class
-        ActiveAgent::GenerationProvider::Response
+      def update_context(prompt:, message:, response:)
+        prompt.message = message
+        prompt.messages << message
+      end
+
+      protected
+
+      def prompt_parameters
+        {
+          messages: @prompt.messages,
+          temperature: @config["temperature"] || 0.7
+        }
       end
     end
   end

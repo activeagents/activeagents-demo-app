@@ -1,46 +1,43 @@
 # frozen_string_literal: true
 
-require "active_support/concern"
-
 module ActiveAgent
   module Callbacks
     extend ActiveSupport::Concern
 
     included do
       include ActiveSupport::Callbacks
-      define_callbacks :generate
-      define_callbacks :process_action
+      define_callbacks :generate, skip_after_callbacks_if_terminated: true
+      define_callbacks :stream, skip_after_callbacks_if_terminated: true
     end
 
     module ClassMethods
-      def before_generate(*methods)
-        set_callback :generate, :before, *methods
+      # Defines a callback that will get called right before the
+      # prompt is sent to the generation provider method.
+      def before_generate(*filters, &)
+        set_callback(:generate, :before, *filters, &)
       end
 
-      def after_generate(*methods)
-        set_callback :generate, :after, *methods
+      # Defines a callback that will get called right after the
+      # prompt's generation method is finished.
+      def after_generate(*filters, &)
+        set_callback(:generate, :after, *filters, &)
       end
 
-      def around_generate(*methods)
-        set_callback :generate, :around, *methods
+      # Defines a callback that will get called around the prompt's generation method.
+      def around_generate(*filters, &)
+        set_callback(:generate, :around, *filters, &)
       end
 
-      def before_action(*filters, &blk)
-        set_callback(:process_action, :before, *filters, &blk)
-      end
-
-      def after_action(*filters, &blk)
-        set_callback(:process_action, :after, *filters, &blk)
-      end
-
-      def around_action(*filters, &blk)
-        set_callback(:process_action, :around, *filters, &blk)
+      # Defines a callback for handling streaming responses during generation
+      def on_stream(*filters, &)
+        set_callback(:stream, :before, *filters, &)
       end
     end
 
-    def process(action, *args)
-      run_callbacks :process_action do
-        public_send(action, *args)
+    # Helper method to run stream callbacks
+    def run_stream_callbacks(message, delta = nil, stop = false)
+      run_callbacks(:stream) do
+        yield(message, delta, stop) if block_given?
       end
     end
   end

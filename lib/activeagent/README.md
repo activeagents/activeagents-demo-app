@@ -1,264 +1,188 @@
 # Active Agent
-Generative AI powered Rails apps
 
-## What is Active Agent?
-Active Agent is a framework for interacting with generative AI services. ActiveAgent provides a simple and flexible service adapter interface to support various AI providers.
+## Install
 
-## How does Active Agent work?
-Active Agent provides an interface to define Agents that can load context take prompts then generate content or perform actions. Agents can receive text, image, audio prompts to generate content in the form of text, image, and audio.
+### Gemfile
+`gem 'activeagent'`
 
-### Define Agents
-Agents are the core of Active Agent. An agent takes instructions and can perform actions augment responses by providing data used for generation. Agents are defined by a simple Ruby class that inherits from `ActiveAgent::base` located in the `app/agents` directory.
+### CLI
+`gem install activeagent`
 
-#### Set your Generative AI provider and model
+### Rails Generator
+After installing the gem, run the Rails installation generator:
+
+```bash
+$ rails generate active_agent:install
+```
+
+This will create:
+```
+create  config/initializers/active_agent.rb
+create  config/active_agent.yml
+create  app/agents/application_agent.rb
+create  app/agents
+```
+
+- An initializer that uses default configurations 
 ```ruby
-class ModerationAgent < ActiveAgent::Base
-  generate_with :openai, model: 'gpt-3.5-turbo', instructions: "Determine if this content is appropriate, by returning YES for appropriate or NO for inappropriate. Only respond with one word `YES` or `NO`."
+# config/initializers/active_agent.rb
+ActiveAgent.load_configuration(Rails.root.join('config', 'active_agent.yml'))
+```
+- A YAML configuration file for provider settings, such as OpenAI and might include environment-specific configurations:
+```yaml
+# config/active_agent.yml
+development:
+  openai:
+    service: "OpenAI"
+    api_key: <%= Rails.application.credentials.dig(:openai, :api_key) %>
+    model: "gpt-3.5-turbo"
+    temperature: 0.7
 
+production:
+  openai:
+    service: "OpenAI"
+    api_key: <%= Rails.application.credentials.dig(:openai, :api_key) %>
+    model: "gpt-3.5-turbo"
+    temperature: 0.7
 
-end
+```
+- A base application agent class
+```ruby
+# app/agents/application_agent.rb
+class ApplicationAgent < ActiveAgent::Base
+  layout 'agent'
 
-class SummarizationAgent < ActiveAgent::Base, instructions: :summarize
-  generate_with :openai, model: 'gpt-4o'
-
-  def summarize
-    <<-SUMMARIZE_INSTRUCTIONS
-      Summarize content in 1-2 sentences.
-    SUMMARIZE_INSTRUCTIONS
+  def prompt
+    super { |format| format.text { render plain: params[:message] } }
   end
-end
+```
+- The agents directory structure
+
+## Agent
+Create agents that take instructions, prompts, and perform actions
+
+### Rails Generator
+To use the Rails Active Agent generator to create a new agent and the associated views for the requested action prompts:
+
+```bash
+$ rails generate active_agent:agent travel search book plans 
+```
+This will create:
+```
+create  app/agents/travel_agent.rb
+create  app/views/agents/travel/search.text.erb
+create  app/views/agents/travel/book.text.erb
+create  app/views/agents/travel/plans.text.erb
 ```
 
-### Generate content
-Agents generate content by calling the `generate_now` method with a prompt. The `generate_now` method returns a message object that contains the generated content.
+The generator creates:
+- An agent class inheriting from ApplicationAgent
+- Text template views for each action
+- Action methods in the agent class for processing prompts
 
+### Agent Actions
 ```ruby
-ModerationAgent.prompt("Is this content appropriate? #{content}").generate_now
-```
-
-Agents can also generate content asynchronously by calling the `generate_later` method with a prompt. The `generate_later` method enqueues an Active Job using the GenerationJob.
-
-```ruby
-ModerationAgent.prompt("Is this content appropriate? #{content}").generate_later
-```
-
-#### Generate content with context
-Agents can generate content with context by calling the `generate_now` method with a prompt and context. The context is used to augment the prompt and provide additional information to the generative AI model.
-
-```ruby
-ModerationAgent.prompt("Is this content appropriate? #{content}", content: content, messages: messages ).generate_now
-```
-
-### Action Prompts
-Similarly to ActionController and ActionMailer, Active Agent uses Action Prompt both for rendering `instructions` and dynamic prompt views as well as rendering action views. Action Prompt `instructions` in the form of a system message.
-
-### Define instructions and actions
-Instructions are the context provided to the agent to generate content. Actions are the methods that the agent can call to perform tasks. Instructions are defined in the agent class and actions are defined in the `app/agents/operations` `config/operations.rb` file.
-```ruby
-# app/agents/inventory_agent.rb
-class InventoryAgent < ActiveAgent::Base
-  generate_with :openai, model: 'gpt-4o'
-
-  # Define the agent's default instructions to use the inventory_operations action
-  default instructions: :inventory_operations
-
-  def inventory_operations
-    @organization = Organization.find(params[:account_id])
-  end
-end
-```
-
-### Action Prompts
-Similarly to ActionController and ActionMailer, Active Agent uses Action Prompt both for rendering `instructions` prompt views as well as rendering action views. Action Prompt `instructions` in the form of a system message.
-
-```ruby
-# app/views/inventory_agent/inventory_operations.text.erb
-  INSTRUCTIONS: You are an inventory manager for <%= @organization.name %>. You can search for inventory or reconcile inventory using <%= assigned_actions %>
-```
-
-### What are Actions?
-Actions are just Ruby methods so they can do anything app can do already. Actions are commonly used retrieve data or interact with external services. The Actions are called when the agent generates an agent message requesting a function call. Actions are defined on the agent class or as part of an operations controller.
-
-### How do Agents call Actions?
-Similar to how Rails needs to define routes to requests to controller actions, Active Agent needs to be provided with the Actions and their JSON schema in order to provide the actions usage information to the Agent. The Actions are defined in a similar way to how Rails defines controller actions. 
-
-# app/agents/inventory_agent.rb
-```ruby
-class InventoryAgent < ActiveAgent::Base
-  generate_with :openai, model: 'gpt-4o'
-
-  # Define the agent's default instructions to use the inventory_operations action
-  default instructions: :inventory_operations
-
-  def inventory_operations
-    @organization = Organization.find(params[:account_id])
-    message(:inventory_operation, role: :system)
-  end
-
+class TravelAgent < ApplicationAgent
   def search
-    @inventory = Inventory.search(params[:query])
-    # message(:search, role: :assistant, content: @inventory)
+    
+    prompt { |format| format.text { render plain: "Searching for travel options" } }
+  end
+
+  def book
+    prompt { |format| format.text { render plain: "Booking travel plans" } }
+  end
+
+  def plans
+    prompt { |format| format.text { render plain: "Making travel plans" } }
   end
 end
 ```
 
-ActiveAgent::Message is a class that represents a message that is sent to an agent. The message contains the content of the message, the role of the message, and the agent used to generate the response. The message is used to communicate with the agent and provide additional context to the agent.
-```ruby
-InventoryAgent.prompt(content: content).message
-=> #<ActiveAgent::Message:0x00007f9b1b1b3d20 @agent=#<InventoryAgent:0x00007f9b1b1b3d48>, @content="How many apples do we have?", @role="user">
-```
+## Action Prompt
 
+Action Prompt provides the structured interface for composing AI interactions through messages, actions/tools, and conversation context. [Read more about Action Prompt](lib/active_agent/action_prompt/README.md)
 
 ```ruby
-InventoryAgent.search(query: query).message
-=> #<ActiveAgent::Message:0x00007f9b1b1b3d20 @agent=#<InventoryAgent:0x00007f9b1b1b3d48>, @content="How many apples do we have?", @role="tool">
+agent.prompt(message: "Find hotels in Paris", 
+      actions: [{name: "search", params: {query: "hotels paris"}}])
 ```
+
+The prompt interface manages:
+- Message content and roles (system/user/assistant)
+- Action/tool definitions and requests
+- Headers and context tracking
+- Content types and multipart handling
+
+### Generation Provider 
+
+Generation Provider defines how prompts are sent to AI services for completion and embedding generation. [Read more about Generation Providers](lib/active_agent/generation_provider/README.md)
 
 ```ruby
-```
+class VacationAgent < ActiveAgent::Base
+  # Try not to get too model-rous with the parameters!
+  generate_with :openai, 
+  model: "gpt-4",
+  temperature: 0.7
 
-
-By default the actions will have a basic schema without any additional information. The schema can be customized by defining a JSON schema in the action view. 
-
-```json.erb
-{
-  type: "function",
-  function: {
-    name: "inventory_search",
-    description: "Inventory search",
-    parameters: {  # Format: https://json-schema.org/understanding-json-schema
-      type: :object,
-    },
-  },
-}
-```
-
-The inventory search tool schema can be customized in `app/views/inventory_agent/search.json.jbuilder`.
-
-```ruby
-# app/views/inventory_agent/search.json.jbuilder
-json.type "function"
-json.function do
-  json.name "inventory_search"
-  json.description "Search for inventory by name or SKU"
-  json.parameters do
-    json.type "object"
-    json.properties do
-      json.query do
-        json.type "string"
-        json.description "Search query for full-text search by inventory item name or SKU"
-      end
-    end
-    json.required ["query"]
-  end
+  # Embed yourself in the joy of vector search
+  embed_with :openai,
+  model: "text-embedding-ada-002" 
 end
 ```
 
-```json.erb
-{
-  type: "function",
-  function: {
-    name: "inventory_search",
-    description: "Search for inventory by name or SKU",
-    parameters: {  # Format: https://json-schema.org/understanding-json-schema
-      type: :object,
-      properties: {
-        query: {
-          type: :string,
-          description: "Search query by inventory name or SKU",
-        },
-      },
-      required: ["query"],
-    },
-  },
-}
-```
+Providers handle:
+- API client configuration
+- Prompt/completion generation
+- Stream processing
+- Embedding generation  
+- Context management
+- Error handling
 
-#### Assigning Actions to Agents
-Agents will have Actions defined in their class available to them at all times. Optionally Actions are assigned to agents by defining the `available_actions` method in the agent class. The `available_actions` method returns an array of actions JSON that the agent can perform. Available Actions can be overridden to provide a custom list of actions.
+### Queue Generation
+
+Active Agent also supports queued generation with Active Job using a common Generation Job interface.
+
+### Perform actions
+
+Active Agents can define methods that are autoloaded as callable tools. These actions’ default schema will be provided to the agent’s context as part of the prompt request to the Generation Provider.
+
+## Actions
 
 ```ruby
-# app/agents/inventory_agent.rb
-class InventoryReportAgent < ActiveAgent::Base
-  # generate_with :openai, model: 'gpt-4o', available_actions: InventoryAgent.actions([:search, :report])
-  generate_with :openai, model: 'gpt-4o', available_actions: { inventory: [:search, :report] }
+def get_cat_image_base64  
+  uri = URI("https://cataas.com/cat")  
+  response = Net::HTTP.get_response(uri)
 
-  # Define the agent's default instructions to use the inventory_operations actions.
-  default instructions: :inventory_operations
-
-  def inventory_operations
-    @organization = Organization.find(params[:account_id])
-    message(:inventory_operation, role: :system)
-  end
+  if response.is_a?(Net::HTTPSuccess)  
+    image_data = response.body  
+    Base64.strict_encode64(image_data)  
+  else  
+    raise "Failed to fetch cat image. Status code: #{response.code}"  
+  end  
 end
+
+class SupportAgent < ActiveAgent  
+  generate_with :openai,  
+    model: "gpt-4o",  
+    instructions: "Help people with their problems",  
+    temperature: 0.7
+
+   def get_cat_image  
+    prompt { |format| format.text { render plain: get_cat_image_base64 } }  
+  end  
+end  
 ```
 
-`InventoryOperations.actions([:search])` returns an array of action JSON schemas that the agent can perform. The Agent can then use the action JSON schema to generate a message that requests the action be performed by the Operations controller. The Operations controller then performs the action and returns the result to the Agent in the form of a message with the results in the message's content. 
+## Prompts
 
-#### Actions have consequences
+### Basic 
 
-The results of actions are rendered in the form of a message, providing additional information as context to augment the content generation. 
+#### Plain text prompt and response templates
 
-#### Set the Agent's service configuration and options to use
-By default the agent uses the generation service provider set in the Rails application configuration. 
+### HTML
 
-## Configuration
-Active Agent uses a configuration file to define the service provider and model to use for generation. The configuration file is located in the `config/agents.yml` file.
+### Action Schema JSON
 
-```yaml
-default: &default
-  model: "gpt-4o"
-  temperature: 0.8
-  n: 1
+response = SupportAgent.prompt(‘show me a picture of a cat’).generate_now
 
-openai: &open_ai
-  <<: *default
-  service: OpenAI
-  project: your_project_name
-  organization: your_organization
-  api_key: <%= Rails.application.credentials.dig(:openai, :api_key) %>
-
-development:
-  <<: *open_ai
-  model: "gpt-3.5-turbo"
-```
-
-The configuration file is loaded into the Rails application configuration and can be accessed using the `Rails.application.config.active_agent` object. The configuration file can be used to set the default service provider and model to use for generation.
-
-```ruby
-class Application < Rails::Application
-  config.active_agent.generation_provider = :openai
-end
-```
-
-#### Generation service provider configurations are defined in the `config/generation.yml` file
-```yaml
-openai:
-  access_token: <%= Rails.application.credentials.openai_access_token %>
-```
-# Options
-
-
-### How can agents be used?
-Agents can be used to perform actions 
-
-### Configuration
-Active Agent uses a configuration file to define the service provider and model to use for generation. The configuration file is located in the `config/agents.yml` file.
-
-```yaml
-default: &default
-  model: "gpt-4o"
-  temperature: 0.8
-  n: 1
-
-openai: &open_ai
-  <<: *default
-  service: OpenAI
-  project: your_project_name
-  organization: your_organization
-  api_key: <%= Rails.application.credentials.dig(:openai, :api_key) %>
-
-development:
-  <<: *open_ai
-  model: "gpt-3.5-turbo"
-```
+response.message

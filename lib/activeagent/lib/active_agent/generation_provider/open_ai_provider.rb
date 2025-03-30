@@ -1,73 +1,138 @@
-# frozen_string_literal: true
+# lib/active_agent/generation_provider/open_ai_provider.rb
 
-require 'openai'
+require "openai"
+require "active_agent/action_prompt/action"
+require_relative "base"
+require_relative "response"
 
 module ActiveAgent
   module GenerationProvider
     class OpenAIProvider < Base
       def initialize(config)
-        super(config)
-        @api_key = config['api_key']
-        @model_name = config['model'] || 'gpt-3.5-turbo'
+        super
+        @api_key = config["api_key"]
+        @model_name = config["model"] || "gpt-4o-mini"
+        @client = OpenAI::Client.new(access_token: @api_key, log_errors: true)
       end
 
-      def generate(agent, stream: nil)
-        @agent = agent
-        client = OpenAI::Client.new(api_key: @api_key)
-        parameters = build_parameters(agent)
-        if stream
-          parameters[:stream] = true
-          client.chat(parameters: parameters) do |chunk, bytesize|
-            stream.call(chunk, bytesize)
-          end
-        else
-          response = client.chat(parameters: parameters)
-          handle_response(agent, response)
-        end
+      def generate(prompt)
+        @prompt = prompt
+
+        chat_prompt(parameters: prompt_parameters)
       rescue => e
-        handle_error(e)
+        raise GenerationProviderError, e.message
+      end
+
+      def chat_prompt(parameters: prompt_parameters)
+        parameters[:stream] = provider_stream if prompt.options[:stream] || config["stream"]
+
+        chat_response(@client.chat(parameters: parameters))
+      end
+
+      def embed(prompt)
+        @prompt = prompt
+
+        embeddings_prompt(parameters: embeddings_parameters)
+      rescue => e
+        raise GenerationProviderError, e.message
+      end
+
+      def embeddings_parameters(input: prompt.message.content, model: "text-embedding-3-large")
+        {
+          model: model,
+          input: input
+        }
+      end
+
+      def embeddings_response(response)
+        message = Message.new(content: response.dig("data", 0, "embedding"), role: "assistant")
+
+        @response = ActiveAgent::GenerationProvider::Response.new(prompt: prompt, message: message, raw_response: response)
+      end
+
+      def embeddings_prompt(parameters:)
+        embeddings_response(@client.embeddings(parameters: embeddings_parameters))
       end
 
       private
 
-      def build_parameters(agent)
+      def provider_stream
+        # prompt.options[:stream] will define a proc found in prompt at runtime
+        # config[:stream] will define a proc found in config. stream would come from an Agent class's generate_with or stream_with method calls
+        agent_stream = prompt.options[:stream]
+        message = ActiveAgent::ActionPrompt::Message.new(content: "", role: :assistant)
+        @response = ActiveAgent::GenerationProvider::Response.new(prompt: prompt, message:)
+
+        proc do |chunk, bytesize|
+          if (new_content = chunk.dig("choices", 0, "delta", "content"))
+            message.content += new_content
+
+            agent_stream.call(message, new_content, false) do |message, new_content|
+              yield message, new_content if block_given?
+            end
+          end
+
+          agent_stream.call(message, nil, true) do |message|
+            yield message, nil if block_given?
+          end
+        end
+      end
+
+      def prompt_parameters(model: @prompt.options[:model] || @model_name, messages: @prompt.messages, temperature: @config["temperature"] || 0.7, tools: @prompt.actions)
         {
-          model: @model_name,
-          messages: build_messages(agent),
-          temperature: @config['temperature'] || 0.7
+          model: model,
+          messages: provider_messages(messages),
+          temperature: temperature,
+          tools: tools.presence
         }
       end
 
-      def build_messages(agent)
-        messages = []
-        if agent.instructions.present?
-          system_message = { role: 'system', content: agent.instructions }
-          messages << system_message
+      def provider_messages(messages)
+        messages.map do |message|
+          provider_message = {
+            role: message.role,
+            tool_call_id: message.action_id.presence,
+            content: message.content,
+            type: message.content_type,
+            charset: message.charset
+          }.compact
+
+          if message.content_type == "image_url"
+            provider_message[:image_url] = {url: message.content}
+          end
+          provider_message
         end
-        if agent.content.present?
-          user_message = { role: 'user', content: agent.content }
-          messages << user_message
-        end
-        messages
       end
 
-      def handle_response(agent, response)
-        adapter = response_class.new(response)
-        agent.message = Message.create(
-          chat_id: agent.context[:chat_id],
-          role: 'assistant',
-          content: adapter.content
+      def chat_response(response)
+        binding.irb
+        return @response if prompt.options[:stream]
+
+        message_json = response.dig("choices", 0, "message")
+
+        message = ActiveAgent::ActionPrompt::Message.new(
+          content: message_json["content"],
+          role: message_json["role"],
+          action_requested: message_json["finish_reason"] == "tool_calls",
+          requested_actions: handle_actions(message_json["tool_calls"])
         )
+        update_context(prompt: prompt, message: message, response: response)
+
+        @response = ActiveAgent::GenerationProvider::Response.new(prompt: prompt, message: message, raw_response: response)
       end
 
-      def handle_error(error)
-        Rails.logger.error "OpenAIProvider Error: #{error.message}"
-        raise error
-      end
-
-      class Response < GenerationProvider::Response
-        def content
-          response.dig('choices', 0, 'message', 'content')
+      def handle_actions(tool_calls)
+        if tool_calls
+          tool_calls.map do |tool_call|
+            ActiveAgent::ActionPrompt::Action.new(
+              id: tool_call["id"],
+              name: tool_call.dig("function", "name"),
+              params: JSON.parse(
+                tool_call.dig("function", "arguments"),
+                {symbolize_names: true}
+              )
+            )
+          end
         end
       end
     end

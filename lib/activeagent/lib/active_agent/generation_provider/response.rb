@@ -3,26 +3,12 @@
 module ActiveAgent
   module GenerationProvider
     class Response
-      attr_reader :response
+      attr_reader :message, :prompt, :raw_response
 
-      def initialize(response)
-        @response = response
-      end
-
-      def content
-        raise NotImplementedError, "Subclasses must implement the content method"
-      end
-
-      def function_call?
-        false
-      end
-
-      def function_name
-        nil
-      end
-
-      def function_arguments
-        {}
+      def initialize(prompt:, message:, raw_response: nil)
+        @message = message
+        @prompt = prompt
+        @raw_response = raw_response
       end
     end
   end

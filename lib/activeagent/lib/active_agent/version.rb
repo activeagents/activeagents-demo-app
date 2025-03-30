@@ -1,4 +1,3 @@
-# lib/active_agent/version.rb
 module ActiveAgent
-  VERSION = "0.0.1"
+  VERSION = "0.2.6.9"
 end

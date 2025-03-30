@@ -19,14 +19,14 @@ module ActiveAgent
     end
 
     class Agent
-      def initialize(agent_class, params)
-        @agent_class = agent_class
+      def initialize(agent, params)
+        @agent = agent
         @params = params
       end
 
       def method_missing(method_name, ...)
-        if @agent_class.public_instance_methods.include?(method_name)
-          ActiveAgent::Parameterized::Generation.new(@agent_class, method_name, @params, ...)
+        if @agent.public_instance_methods.include?(method_name)
+          ActiveAgent::Parameterized::Generation.new(@agent, method_name, @params, ...)
         else
           super
         end
@@ -43,13 +43,24 @@ module ActiveAgent
         @params = params
       end
 
+      private
 
       def processed_agent
         @processed_agent ||= @agent_class.new.tap do |agent|
           agent.params = @params
           agent.process @action, *@args
         end
-      end 
+      end
+
+      def enqueue_generation(generation_method, options = {})
+        if processed?
+          super
+        else
+          @agent_class.generation_job.set(options).perform_later(
+            @agent_class.name, @action.to_s, params: @params, args: @args
+          )
+        end
+      end
     end
   end
 end

@@ -12,18 +12,18 @@ gem "sprockets-rails"
 gem "sqlite3", "~> 1.4"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
-gem 'activeagent', path: 'lib/activeagent', require: 'active_agent'
+gem "puma", ">= 6.6.0"
+gem "activeagent", path: "lib/activeagent"
+# gem 'activeagent', '0.2.4.rc4', require: 'active_agent'
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
-gem 'uri', '0.13.1'
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
 
-# Build JSON APIs with ease [https://github.com/rails/jbuilder]
+# Build JSON APIs with ease [https://github.com/rails/jbuilder] 
 gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
@@ -35,7 +35,7 @@ gem "redis", ">= 4.0.1"
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -46,7 +46,7 @@ gem "bootsnap", require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "open_router"
-  gem "debug", platforms: %i[ mri windows ]
+  gem "debug", platforms: %i[mri windows]
 end
 
 group :development do
