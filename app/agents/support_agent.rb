@@ -7,7 +7,6 @@ class SupportAgent < ApplicationAgent
   
   on_stream :broadcast_message
   after_action :create_message, only: [:get_cat_image]
-  after_generation :save_context
   
   def get_cat_image
     prompt(content_type: 'image_url', message: params[:message], messages: params[:messages], context_id: params[:context_id]) do |format| 
