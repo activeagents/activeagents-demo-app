@@ -1,52 +1,46 @@
 class SupportAgent < ApplicationAgent
   layout "agent"
-  generate_with :openai, model: "gpt-4o-mini", instructions: "You're a support agent. You're job is to help users with their questions."
-
-  after_generate :create_message 
-  after_generate :save_context
+  generate_with :openai, model: "gpt-4o-mini", 
+    instructions: "You're a support agent. Your job is to help users with their questions.", stream: true
 
   before_action :load_context
-
+  
   on_stream :broadcast_message
+  after_action :create_message, only: [:get_cat_image]
+  after_generation :save_context
   
   def get_cat_image
-    prompt(content_type: 'image_url', messages: @chat.to_context.messages) do |format| 
-      format.text { render plain: get_cat_image_base64 } 
-      format.json 
+    prompt(stream: true, content_type: 'image_url', message: params[:message], messages: params[:messages], context_id: params[:context_id]) do |format| 
+      format.text { render plain: CatImageService.fetch_base64_image } 
+      format.json
     end
   end
 
   private 
   def create_message
-    # @message = @message || @chat.messages.create(content: generation_provider.response.message.content, role: 'assistant')
+    binding.irb
+    # @message = @message || @chat.messages.find_or_create_by(generation_id: generation_provider.response.message.generation_id, content: generation_provider.response.message.content, role: generation_provider.response.message.role)
   end
 
   def load_context
-    @chat = Chat.find(params[:chat_id])
+    @chat = Chat.find(params[:context_id])
+    params[:messages] = @chat.to_context.messages 
   end
 
   def save_context
-    @chat.messages_from_context(context: prompt_context)
-    @chat.save
+    # binding.irb
+    # @chat.messages_from_context(context: generation_provider.response.prompt)
+    # @chat.save
   end
 
   def broadcast_message
-    @chat = Chat.find(generation_provider.prompt.context_id)
-    @message = @message || @chat.messages.create(content: generation_provider.response.message.content, role: 'assistant')
-    puts "Broadcasting message... #{generation_provider.response.message.content}"
-
-    @message.update(content: generation_provider.response.message.content)
+    if generation_provider.response.message.generation_id.present?
+      @chat = Chat.find(generation_provider.response.prompt.context_id)
+      @message = @message || @chat.messages.find_or_initialize_by(generation_id: generation_provider.response.message.generation_id, role: generation_provider.response.message.role)
+      @message.content = generation_provider.response.message.content
+      @message.save!
+    else
+      @message = nil
+    end
   end 
-  
-  def get_cat_image_base64  
-    uri = URI("https://cataas.com/cat")
-    response = Net::HTTP.get_response(uri)
-  
-    if response.is_a?(Net::HTTPSuccess)  
-      image_data = response.body  
-      "data:image/jpeg;base64,#{Base64.strict_encode64(image_data)}"  
-    else  
-      raise "Failed to fetch cat image. Status code: #{response.code}"  
-    end  
-  end
 end

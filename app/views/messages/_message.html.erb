@@ -7,10 +7,18 @@
         <%= message.content %>
       <% end %>
     </div>
-  <% else %>
+  <% elsif message.tool? %>    
+    <div class="p-4 m-8 bg-green-200 rounded-lg">
+      <% if message.content.length > 5000 %>
+        <%= image_tag message.content.to_s %>
+      <% else %>
+        <%= message.content %>
+      <% end %>
+    </div>
+  <% elsif message.assistant? %>
     <div class="p-4 m-8 bg-gray-200 rounded-lg">
       <% if message.content.length > 5000 %>
-        <img src="#{message.content}" %>
+        <%= image_tag message.content.to_s %>
       <% else %>
         <%= message.content %>
       <% end %>

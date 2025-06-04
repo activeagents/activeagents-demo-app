@@ -1,12 +1,12 @@
 class MessagesController < ApplicationController
-  def create    
+  def create
     @chat = Chat.find(params[:chat_id])
     @message = @chat.messages.create(message_params.merge(role: 'user'))
 
 
     SupportAgent.with(
       message: @message.content,
-      chat_id: @chat.id
+      context_id: @chat.id
     ).text_prompt.generate_later
 
     respond_to do |format|

@@ -1,18 +1,18 @@
-<div class="flex w-full mx-auto">
-  <div class="mx-auto">
-
-    <div class="py-8 bg-white">
-      <div class="max-w-lg px-6 mx-auto ">
-        <ul role="list" class="overflow-y-auto max-h-[48vh] flex flex-col-reverse">
+<div class="flex flex-col w-full h-screen mx-auto">
+  <div class="flex-1 overflow-hidden">
+    <div class="h-full bg-white">
+      <div class="flex flex-col h-full max-w-lg px-6 mx-auto">
+        <ul role="list" class="flex-1 py-8 overflow-y-auto">
           <%= turbo_stream_from "#{dom_id(@chat)}_messages" %>
-          <div id="<%= dom_id(@chat) %>_messages">
-            <%= render @chat.messages %>
+          <div id="<%= dom_id(@chat) %>_messages" class="flex flex-col">
+            <%= render @chat.messages.order(created_at: :asc) %>
           </div>
         </ul>
 
-        <%= render partial: "messages/form", locals: { chat: @chat } %>
+        <div class="sticky bottom-0 pb-6 bg-white">
+          <%= render partial: "messages/form", locals: { chat: @chat } %>
+        </div>
       </div>
     </div>
-
   </div>
 </div>
