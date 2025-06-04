@@ -17,16 +17,7 @@ class SupportAgent < ApplicationAgent
 
   private 
   def create_message
-    tool_call_message = @chat.messages.build(generation_id: (generation_provider.response.message.generation_id || SecureRandom.uuid), role: generation_provider.response.message.role)
-    tool_call_message.requested_actions = { tool_calls: generation_provider.response.message.raw_actions }
-    tool_call_message.content = generation_provider.response.message.content
-    tool_call_message.save!
-    tool_result_message = @chat.messages.create(
-      action_id: generation_provider.response.message.requested_actions.first.id,
-      action_name: generation_provider.response.message.requested_actions.first.name,
-      content: generation_provider.response.prompt.messages.last.content,
-      role: :tool
-      )
+    @chat.create_tool_messages(generation_provider.response)
   end
 
   def load_context
@@ -35,13 +26,7 @@ class SupportAgent < ApplicationAgent
   end
 
   def broadcast_message
-    if generation_provider.response.message.generation_id.present?
-      @chat = Chat.find(generation_provider.response.prompt.context_id)
-      @message = @message || @chat.messages.find_or_initialize_by(generation_id: generation_provider.response.message.generation_id, role: generation_provider.response.message.role)
-      @message.content = generation_provider.response.message.content
-      @message.save!
-    else
-      @message = nil
-    end
-  end 
+    @chat = Chat.find(generation_provider.response.prompt.context_id)
+    @message = @chat.find_or_create_streaming_message(generation_provider.response)
+  end
 end
