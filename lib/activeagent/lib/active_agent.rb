@@ -1,6 +1,5 @@
 require "yaml"
 require "abstract_controller"
-require "active_agent/action_prompt"
 require "active_agent/generation_provider"
 require "active_agent/version"
 require "active_agent/deprecator"
@@ -12,7 +11,6 @@ require "active_support/core_ext/class"
 require "active_support/core_ext/module/attr_internal"
 require "active_support/core_ext/string/inflections"
 require "active_support/lazy_load_hooks"
-
 module ActiveAgent
   extend ActiveSupport::Autoload
 

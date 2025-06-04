@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_31_212143) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_04_022923) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_31_212143) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "generation_id", comment: "ID of the generation associated with this message"
+    t.string "action_id"
+    t.string "action_name"
+    t.json "requested_actions"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
     t.index ["generation_id"], name: "index_messages_on_generation_id", unique: true, comment: "Index for generation ID to ensure uniqueness"
   end

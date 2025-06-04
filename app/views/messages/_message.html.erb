@@ -15,7 +15,7 @@
         <%= message.content %>
       <% end %>
     </div>
-  <% elsif message.assistant? %>
+  <% elsif message.assistant? && message.content.length > 0 %>
     <div class="p-4 m-8 bg-gray-200 rounded-lg">
       <% if message.content.length > 5000 %>
         <%= image_tag message.content.to_s %>

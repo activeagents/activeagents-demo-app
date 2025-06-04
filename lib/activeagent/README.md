@@ -17,18 +17,13 @@ $ rails generate active_agent:install
 
 This will create:
 ```
-create  config/initializers/active_agent.rb
 create  config/active_agent.yml
 create  app/agents/application_agent.rb
 create  app/agents
 ```
 
-- An initializer that uses default configurations 
-```ruby
-# config/initializers/active_agent.rb
-ActiveAgent.load_configuration(Rails.root.join('config', 'active_agent.yml'))
-```
 - A YAML configuration file for provider settings, such as OpenAI and might include environment-specific configurations:
+
 ```yaml
 # config/active_agent.yml
 development:
@@ -36,6 +31,10 @@ development:
     service: "OpenAI"
     api_key: <%= Rails.application.credentials.dig(:openai, :api_key) %>
     model: "gpt-3.5-turbo"
+    temperature: 0.7
+  ollama:
+    service: "Local Ollama"
+    model: "llama3.2"
     temperature: 0.7
 
 production:
@@ -119,12 +118,10 @@ Generation Provider defines how prompts are sent to AI services for completion a
 
 ```ruby
 class VacationAgent < ActiveAgent::Base
-  # Try not to get too model-rous with the parameters!
   generate_with :openai, 
   model: "gpt-4",
   temperature: 0.7
 
-  # Embed yourself in the joy of vector search
   embed_with :openai,
   model: "text-embedding-ada-002" 
 end

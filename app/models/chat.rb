@@ -15,8 +15,14 @@ class Chat < ApplicationRecord
   def to_context
     prompt = ActiveAgent::ActionPrompt::Prompt.new
 
-    prompt.messages = messages.map do |message|
-      ActiveAgent::ActionPrompt::Message.new(content: message.content, role: message.role)
+    prompt.messages = messages.order(created_at: :asc).map do |message|
+      action_message = ActiveAgent::ActionPrompt::Message.new(content: message.content, role: message.role)
+      action_message.action_id = message.action_id.presence
+      action_message.action_name = message.action_name.presence
+      if action_message.action_requested = message.requested_actions.present?
+        action_message.raw_actions = { tool_calls: message.requested_actions["tool_calls"] }
+      end
+      action_message
     end
 
     prompt

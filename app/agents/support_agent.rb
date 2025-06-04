@@ -10,7 +10,7 @@ class SupportAgent < ApplicationAgent
   after_generation :save_context
   
   def get_cat_image
-    prompt(stream: true, content_type: 'image_url', message: params[:message], messages: params[:messages], context_id: params[:context_id]) do |format| 
+    prompt(content_type: 'image_url', message: params[:message], messages: params[:messages], context_id: params[:context_id]) do |format| 
       format.text { render plain: CatImageService.fetch_base64_image } 
       format.json
     end
@@ -18,19 +18,21 @@ class SupportAgent < ApplicationAgent
 
   private 
   def create_message
-    binding.irb
-    # @message = @message || @chat.messages.find_or_create_by(generation_id: generation_provider.response.message.generation_id, content: generation_provider.response.message.content, role: generation_provider.response.message.role)
+    @tool_call_message = @chat.messages.build(generation_id: generation_provider.response.message.generation_id, role: generation_provider.response.message.role)
+    @tool_call_message.requested_actions = { tool_calls: generation_provider.response.message.raw_actions }
+    @tool_call_message.content = generation_provider.response.message.content
+    @tool_call_message.save!
+    @tool_result_message = @chat.messages.create(
+      action_id: generation_provider.response.message.requested_actions.first.id,
+      action_name: generation_provider.response.message.requested_actions.first.name,
+      content: generation_provider.response.prompt.messages.last.content,
+      role: :tool
+      )
   end
 
   def load_context
     @chat = Chat.find(params[:context_id])
     params[:messages] = @chat.to_context.messages 
-  end
-
-  def save_context
-    # binding.irb
-    # @chat.messages_from_context(context: generation_provider.response.prompt)
-    # @chat.save
   end
 
   def broadcast_message
