@@ -80,7 +80,8 @@ module ActiveAgent
             charset: message.charset
           }.compact
 
-          if message.content_type == "image_url"
+          if message.content_type == "image_url" || message.content[0..4] == "data:"
+            provider_message[:type] = "image_url"
             provider_message[:image_url] = {url: message.content}
           end
           provider_message

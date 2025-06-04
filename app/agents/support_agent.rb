@@ -1,6 +1,6 @@
 class SupportAgent < ApplicationAgent
   layout "agent"
-  generate_with :openai, model: "gpt-4o-mini", 
+  generate_with :openai, model: "gpt-4.1-nano", 
     instructions: "You're a support agent. Your job is to help users with their questions.", stream: true
 
   before_action :load_context
@@ -17,11 +17,11 @@ class SupportAgent < ApplicationAgent
 
   private 
   def create_message
-    @tool_call_message = @chat.messages.build(generation_id: generation_provider.response.message.generation_id, role: generation_provider.response.message.role)
-    @tool_call_message.requested_actions = { tool_calls: generation_provider.response.message.raw_actions }
-    @tool_call_message.content = generation_provider.response.message.content
-    @tool_call_message.save!
-    @tool_result_message = @chat.messages.create(
+    tool_call_message = @chat.messages.build(generation_id: (generation_provider.response.message.generation_id || SecureRandom.uuid), role: generation_provider.response.message.role)
+    tool_call_message.requested_actions = { tool_calls: generation_provider.response.message.raw_actions }
+    tool_call_message.content = generation_provider.response.message.content
+    tool_call_message.save!
+    tool_result_message = @chat.messages.create(
       action_id: generation_provider.response.message.requested_actions.first.id,
       action_name: generation_provider.response.message.requested_actions.first.name,
       content: generation_provider.response.prompt.messages.last.content,
