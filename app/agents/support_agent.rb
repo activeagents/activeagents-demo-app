@@ -1,7 +1,9 @@
 class SupportAgent < ApplicationAgent
   layout "agent"
-  generate_with :openai, model: "gpt-4.1-nano", 
-    instructions: "You're a support agent. Your job is to help users with their questions.", stream: true
+  generate_with :openai, 
+    model: "gpt-4.1-nano", 
+    instructions: "You're a support agent. Your job is to help users with their questions.", 
+    stream: true
 
   before_action :load_context
   

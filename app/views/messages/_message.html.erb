@@ -22,6 +22,12 @@
       <% else %>
         <%= message.content %>
       <% end %>
+      <div class="mt-2">
+        <%= button_to "Translate", translations_path, params: { message_id: message.id }, 
+            method: :post, 
+            class: "px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600",
+            remote: true %>
+      </div>
     </div>
   <% end %>
 </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_04_022923) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_10_135032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -39,6 +39,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_04_022923) do
     t.index ["generation_id"], name: "index_messages_on_generation_id", unique: true, comment: "Index for generation ID to ensure uniqueness"
   end
 
+  create_table "translations", force: :cascade do |t|
+    t.bigint "message_id", null: false
+    t.string "generation_id"
+    t.text "content"
+    t.string "language"
+    t.string "status", default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id"], name: "index_translations_on_message_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -57,6 +68,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_04_022923) do
   end
 
   add_foreign_key "messages", "chats"
+  add_foreign_key "translations", "messages"
   add_foreign_key "users_chats", "chats"
   add_foreign_key "users_chats", "users"
 end

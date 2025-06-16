@@ -13,8 +13,7 @@ gem "sqlite3", "~> 1.4"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 6.6.0"
-gem "activeagent", path: "lib/activeagent"
-# gem 'activeagent', '0.2.4.rc4', require: 'active_agent'
+gem "activeagent"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
