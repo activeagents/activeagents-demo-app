@@ -1,76 +1,36 @@
-# lib/active_agent/base.rb
+# frozen_string_literal: true
+
+require "active_agent/prompt_helper"
+require "active_agent/action_prompt/base"
+
+# The ActiveAgent module provides a framework for creating agents that can generate content
+# and handle various actions. The Base class within this module extends AbstractController::Base
+# and includes several modules to provide additional functionality such as callbacks, generation
+# methods, and rescuable actions.
+#
+# The Base class defines several class methods for registering and unregistering observers and
+# interceptors, as well as methods for generating content with a specified provider and streaming
+# content. It also provides methods for setting default parameters and handling prompts.
+#
+# The instance methods in the Base class include methods for performing generation, processing
+# actions, and handling headers and attachments. The class also defines a NullPrompt class for
+# handling cases where no prompt is provided.
+#
+# The Base class uses ActiveSupport::Notifications for instrumentation and provides several
+# private methods for setting payloads, applying defaults, and collecting responses from blocks,
+# text, or templates.
+#
+# The class also includes several protected instance variables and defines hooks for loading
+# additional functionality.
 module ActiveAgent
-  class Base
-    include ActiveModel::Model
-    extend ActiveModel::Callbacks
-    
-    attr_accessor :reponse, :messages
-
-    define_model_callbacks :generate
-
-    before_generate :handle_stream
-    after_generate :perform_action
-    after_generate :broadcast_stream
-
-    class << self
-      attr_accessor :generation_provider
-
-      def generate_with(provider_name = :default, options = {})
-        config = ActiveAgent.config[provider_name.to_s] || ActiveAgent.config[ENV['RAILS_ENV']]
-        @generation_provider = configure_provider(config)
-        self
-      end
-
-      def generate(prompt:, **options)
-        options[:stream] = handle_stream if options[:stream]
-        new.generate(prompt:, **options)
-      end
-
-      private
-
-      def configure_provider(config)
-        require "active_agent/generation_provider/#{config['service'].underscore}_provider"
-        ActiveAgent::GenerationProvider.const_get(:"#{config['service'].camelize}Provider").new(config)
-      rescue LoadError
-        raise "Missing generation provider for #{config['service'].inspect}"
-      end
+  class Base < ActiveAgent::ActionPrompt::Base
+    # This class is the base class for agents in the ActiveAgent framework.
+    # It is built on top of ActionPrompt which provides methods for generating content, handling actions, and managing prompts.
+    # ActiveAgent::Base is designed to be extended by specific agent implementations.
+    # It provides a common set of agent actions for self-contained agents that can determine their own actions using all available actions.
+    # Base actions include: text_prompt, continue, reasoning, reiterate, and conclude
+    def text_prompt
+      prompt(stream: params[:stream], messages: params[:messages], message: params[:message], context_id: params[:context_id]) { |format| format.text { render plain: params[:message] } }
     end
-
-    def handle_stream(&block)
-      proc do |chunk, _bytesize|
-        new_content = provider_stream_handler
-        block.call(new_content) if block_given? && new_content
-      end
-    end
-    
-    def perform_action
-      Rails.logger.info "Action performed"
-      prerform_provider_action(@response)
-    end
-
-    def broadcast_stream
-      Rails.logger.info "Broadcasting stream"
-    end    
-    
-    def generate(prompt:, **options)
-      run_callbacks :generate do
-        @response = provider_generate(prompt: prompt, **options)
-      end
-
-      @response.dig("choices", 0, "message", "content")
-    end
-
-    private
-      def provider_stream_handler(&block)
-        self.class.generation_provider.handle_stream
-      end
-
-      def prerform_provider_action(response)
-        self.class.generation_provider.perform_action(response)
-      end
-
-      def provider_generate(prompt:, **options)
-        self.class.generation_provider.generate(prompt:, **options)
-      end
   end
 end

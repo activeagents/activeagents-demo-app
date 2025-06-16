@@ -1,11 +1,13 @@
-class InventoryAgent < ActiveAgent::Base
+class InventoryAgent < ApplicationAgent
   # InventoryAgent is able to perform InventoryOperation actions by default
 
   # Configure the agent to use the OpenAIAdapter with the default settings provied by config/initializers/agents.yml
   # default tools loaded with as generate_with tools: [:inventory]
   
   generate_with :openai, 
-    model: :gpt4o
+    model: 'gpt-4o'
+
+  stream_with :stream_proc
 
   # Other options and their deaults are:
   # - instructions: :inventory_operations
@@ -25,6 +27,28 @@ class InventoryAgent < ActiveAgent::Base
   def inventory_operations
     @organization = Organization.find(params[:account_id])
     prompt :inventory_operations, role: :system
+  end
+
+  # Define the stream_proc method for the agent
+  def stream_proc(chat:)
+    
+  end
+  
+  def search_inventory_items
+    if parms[:name]
+      inventory = Inventory.where("name LIKE ?", "%#{params[:query]}%")
+    elsif params[:code]
+      inventory = Inventory.where(code: code).first      
+    else
+      inventory = Inventory.nearest_neighbors(embedding: params[:embedding]).first
+    end
+    inventory
+  end
+
+  def update_inventory_item
+    inventory = Inventory.find(params[:id])
+    inventory.update_attributes(params[:inventory])
+    inventory
   end
 end 
  

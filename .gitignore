@@ -4,6 +4,7 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+**/.DS_Store
 # Ignore bundler config.
 /.bundle
 
@@ -35,3 +36,24 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+/lib/activeagent
+/lib/activeagent/*
+lib/activeagent/activeagent.gemspec
+lib/activeagent/README.md
+lib/activeagent/lib/active_agent.rb
+lib/activeagent/lib/active_agent/action_prompt.rb
+lib/activeagent/lib/active_agent/base.rb
+lib/activeagent/lib/active_agent/callbacks.rb
+lib/activeagent/lib/active_agent/core.rb
+lib/activeagent/lib/active_agent/generation_job.rb
+lib/activeagent/lib/active_agent/generation_provider.rb
+lib/activeagent/lib/active_agent/generation.rb
+lib/activeagent/lib/active_agent/operation.rb
+lib/activeagent/lib/active_agent/parameterized.rb
+lib/activeagent/lib/active_agent/queued_generation
+lib/activeagent/lib/active_agent/queued_generation.rb
+lib/activeagent/lib/active_agent/service.rb
+lib/activeagent/lib/active_agent/version.rb
+lib/activeagent/lib/active_agent/generation_provider/base.rb
+lib/activeagent/lib/active_agent/generation_provider/open_ai_provider.rb
+lib/activeagent/lib/active_agent/generation_provider/response.rb
