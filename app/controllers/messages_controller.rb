@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
     SupportAgent.with(
       message: @message.content,
       context_id: @chat.id
-    ).text_prompt.generate_later
+    ).prompt_context.generate_later
 
     respond_to do |format|
       format.turbo_stream

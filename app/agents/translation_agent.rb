@@ -4,7 +4,7 @@ class TranslationAgent < ApplicationAgent
   after_generation :broadcast_translation
   
   def translate
-    prompt(messages: params[:messages], context_id: params[:context_id]) 
+    prompt
   end
   
   private
