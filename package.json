@@ -1,0 +1,20 @@
+{
+  "name": "app",
+  "private": true,
+  "devDependencies": {
+    "esbuild": "^0.27.2"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/application.js app/javascript/inertia.jsx --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --loader:.jsx=jsx",
+    "build:css": "npx @tailwindcss/cli -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify"
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.23",
+    "@inertiajs/react": "^2.3.12",
+    "@tailwindcss/cli": "^4.1.18",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.1.18"
+  }
+}

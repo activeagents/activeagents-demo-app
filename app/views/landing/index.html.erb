@@ -1,0 +1,335 @@
+<section>
+  <div class="heading hero centered">
+    <a href="https://github.com/activeagents/activeagent" class="eyebrow">Now Open Source!</a>
+    <h1 class="balanced">
+      AI Agent Framework for Rails
+    </h1>
+    <p class="paragraph m secondary balanced">
+      Build intelligent, autonomous agents for your Rails applications. Active Agent brings the power of AI to your Ruby codebase with a familiar, Rails-native approach.
+    </p>
+    <div class="button-group margin-paragraph centered">
+      <a href="/dashboard" class="button primary">Get Started Free</a>
+      <a href="https://github.com/activeagents/activeagent" class="button tertiary">View on GitHub</a>
+    </div>
+  </div>
+  <div class="image-wide">
+    <div class="card-code-block dark" style="max-width: 800px; margin: 0 auto;">
+      <pre class="shiki github-dark-default" style="margin: 0px; color: #e6edf3" tabindex="0"><code><span class="line"><span style="color:#8B949E"># app/agents/support_agent.rb</span></span>
+<span class="line"><span style="color:#FF7B72">class</span> <span style="color:#FFA657">SupportAgent</span> <span style="color:#FF7B72">&lt;</span> <span style="color:#FFA657">ActiveAgent::Base</span></span>
+<span class="line"><span style="color:#7EE787">  generate_with</span> <span style="color:#79C0FF">:openai</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#E6EDF3">    </span><span style="color:#79C0FF">model:</span> <span style="color:#A5D6FF">"gpt-4"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#E6EDF3">    </span><span style="color:#79C0FF">temperature:</span> <span style="color:#79C0FF">0.7</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF7B72">  def</span> <span style="color:#FFA657">handle_inquiry</span><span style="color:#E6EDF3">(</span><span style="color:#FFA657">message</span><span style="color:#E6EDF3">)</span></span>
+<span class="line"><span style="color:#E6EDF3">    prompt </span><span style="color:#79C0FF">do</span> <span style="color:#E6EDF3">|</span><span style="color:#FFA657">p</span><span style="color:#E6EDF3">|</span></span>
+<span class="line"><span style="color:#E6EDF3">      p.</span><span style="color:#7EE787">system</span> <span style="color:#A5D6FF">"You are a helpful support agent."</span></span>
+<span class="line"><span style="color:#E6EDF3">      p.</span><span style="color:#7EE787">user</span> <span style="color:#FFA657">message</span></span>
+<span class="line"><span style="color:#FF7B72">    end</span></span>
+<span class="line"><span style="color:#FF7B72">  end</span></span>
+<span class="line"><span style="color:#FF7B72">end</span></span></code></pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="heading centered">
+    <h2 class="no-top-margin">Why Active Agent?</h2>
+    <p class="paragraph m secondary">
+      Built by Rails developers, for Rails developers. Active Agent follows conventions you already know and love.
+    </p>
+  </div>
+  <div class="cards-with-icons-container">
+    <div class="card-with-icon horizontal">
+      <div class="fa-solid fa-gem icon xl color-accent"></div>
+      <div class="feature-heading">
+        <p class="paragraph m bold">Rails Native</p>
+        <p class="paragraph m secondary">
+          Follows Rails conventions with generators, callbacks, and a familiar DSL. If you know Rails, you know Active Agent.
+        </p>
+      </div>
+    </div>
+    <div class="card-with-icon horizontal">
+      <div class="fa-solid fa-robot icon xl color-accent"></div>
+      <div class="feature-heading">
+        <p class="paragraph m bold">Multi-Provider Support</p>
+        <p class="paragraph m secondary">
+          Works with OpenAI, Anthropic, and other LLM providers. Switch providers without changing your agent code.
+        </p>
+      </div>
+    </div>
+    <div class="card-with-icon horizontal">
+      <div class="fa-solid fa-bolt icon xl color-accent"></div>
+      <div class="feature-heading">
+        <p class="paragraph m bold">Production Ready</p>
+        <p class="paragraph m secondary">
+          Built-in streaming, tool calling, and context management. Deploy with confidence to production environments.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="heading">
+    <h2 class="no-top-margin">Powerful Features</h2>
+    <p class="paragraph m secondary">
+      Everything you need to build intelligent agents that can reason, use tools, and interact with your Rails application.
+    </p>
+  </div>
+  <div class="grid columns-2">
+    <div class="feature-card">
+      <div class="feature-heading">
+        <h3 class="color-accent no-top-margin">
+          Tool Calling
+        </h3>
+        <p class="paragraph s secondary">
+          Define tools as Ruby methods and let your agents call them automatically. Full integration with your Rails models and services.
+        </p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-heading">
+        <h3 class="color-accent no-top-margin">
+          Streaming Responses
+        </h3>
+        <p class="paragraph s secondary">
+          Real-time streaming support for responsive user experiences. Works seamlessly with Turbo Streams and Action Cable.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="grid columns-3">
+    <div class="feature-card">
+      <div class="feature-heading">
+        <h3 class="color-accent no-top-margin">
+          Context Management
+        </h3>
+        <p class="paragraph s secondary">
+          Automatic conversation history and context windowing. Keep your agents informed without token bloat.
+        </p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-heading">
+        <h3 class="color-accent no-top-margin">
+          Callbacks & Hooks
+        </h3>
+        <p class="paragraph s secondary">
+          Before and after callbacks for prompts and generations. Full control over the agent lifecycle.
+        </p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-heading">
+        <h3 class="color-accent no-top-margin">
+          Background Jobs
+        </h3>
+        <p class="paragraph s secondary">
+          Queue agent tasks with Active Job. Long-running generations won't block your request cycle.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="text-centered full-width">
+    <h2>Choose Your Plan</h2>
+    <p class="paragraph m secondary">From open source to enterprise advisory</p>
+  </div>
+  <div class="grid columns-3 margin-top-xl">
+    <div class="feature-card justified-vertically">
+      <div>
+        <div class="feature-heading">
+          <p class="paragraph l bold no-top-margin">activeagent.dev</p>
+          <p class="paragraph s secondary">Open Source</p>
+          <div class="price-line">
+            <div class="paragraph l bold">Free</div>
+          </div>
+        </div>
+        <div class="feature-list">
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Full framework access</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>All providers supported</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Community support</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>GitHub discussions</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>MIT License</div>
+          </div>
+        </div>
+      </div>
+      <a href="https://github.com/activeagents/activeagent" class="button tertiary full-width margin-top-l">Get Started</a>
+    </div>
+    <div class="feature-card justified-vertically">
+      <div>
+        <div class="feature-heading">
+          <p class="paragraph l bold no-top-margin">activeagent.pro</p>
+          <p class="paragraph s secondary">For professional teams</p>
+          <div class="price-line">
+            <div class="paragraph l bold">$19.99</div>
+            <div class="paragraph m secondary">/month</div>
+          </div>
+        </div>
+        <div class="feature-list">
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Everything in Dev</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Priority email support</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Private Discord channel</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Early access to features</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Premium documentation</div>
+          </div>
+        </div>
+      </div>
+      <a href="/dashboard" class="button primary full-width margin-top-l">Subscribe</a>
+    </div>
+    <div class="feature-card justified-vertically">
+      <div>
+        <div class="feature-heading">
+          <p class="paragraph l bold no-top-margin">Enterprise</p>
+          <p class="paragraph s secondary">Advisory & mentorship</p>
+          <div class="price-line">
+            <div class="paragraph l bold">$2.5K+</div>
+            <div class="paragraph m secondary">/month</div>
+          </div>
+        </div>
+        <div class="feature-list">
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Weekly strategy calls</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Priority async support</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Expert feedback & recommendations</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Code review</div>
+          </div>
+          <div class="feature-item paragraph s">
+            <div class="fa-regular fa-square-check icon m"></div>
+            <div>Hiring & client support</div>
+          </div>
+        </div>
+      </div>
+      <a href="mailto:hello@activeagents.ai" class="button tertiary full-width margin-top-l">Contact Us</a>
+    </div>
+  </div>
+  <div class="feature-card" style="margin-top: 2rem;">
+    <div class="feature-heading">
+      <p class="paragraph l bold no-top-margin">Enterprise Advisory Details</p>
+      <p class="paragraph s secondary">
+        Ongoing technical mentorship and AI strategy, without hands-on coding. Perfect for CTOs, lean teams, and agencies offering AI development services to clients.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="heading centered">
+    <h2 class="no-top-margin">FAQ</h2>
+    <p class="paragraph m secondary">
+      Common questions about Active Agent
+    </p>
+  </div>
+  <div class="accordion-container">
+    <details class="accordion-item" name="faq">
+      <summary class="accordion-toggle">
+        <p class="paragraph m bold">How do I install Active Agent?</p>
+        <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+      </summary>
+      <div class="accordion-content">
+        <p>
+          Add <code>gem 'activeagent'</code> to your Gemfile and run <code>bundle install</code>.
+          Then run <code>rails generate active_agent:install</code> to set up the initial configuration.
+        </p>
+      </div>
+    </details>
+
+    <details class="accordion-item" name="faq">
+      <summary class="accordion-toggle">
+        <p class="paragraph m bold">Which LLM providers are supported?</p>
+        <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+      </summary>
+      <div class="accordion-content">
+        <p>
+          Active Agent supports OpenAI, Anthropic (Claude), and other providers. You can also create custom providers for any API-compatible service.
+        </p>
+      </div>
+    </details>
+
+    <details class="accordion-item" name="faq">
+      <summary class="accordion-toggle">
+        <p class="paragraph m bold">Can I use Active Agent with existing Rails apps?</p>
+        <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+      </summary>
+      <div class="accordion-content">
+        <p>
+          Yes! Active Agent is designed to integrate seamlessly with existing Rails applications. It works alongside your existing models, controllers, and services.
+        </p>
+      </div>
+    </details>
+
+    <details class="accordion-item" name="faq">
+      <summary class="accordion-toggle">
+        <p class="paragraph m bold">What's the difference between Dev and Pro?</p>
+        <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+      </summary>
+      <div class="accordion-content">
+        <p>
+          The Dev tier gives you full access to the open-source framework with community support. Pro adds priority support, a private Discord channel, early access to new features, and premium documentation.
+        </p>
+      </div>
+    </details>
+
+    <details class="accordion-item" name="faq">
+      <summary class="accordion-toggle">
+        <p class="paragraph m bold">What does Enterprise Advisory include?</p>
+        <span class="accordion-chevron fa-solid fa-chevron-down"></span>
+      </summary>
+      <div class="accordion-content">
+        <p>
+          Enterprise is for organizations that need strategic guidance. You get weekly calls, priority async support, expert recommendations, code review, and help with hiring and client work. It's advisory-focused, not hands-on coding.
+        </p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="promo-cta">
+  <div class="heading centered">
+    <h2>Start Building Intelligent Agents Today</h2>
+    <div class="button-group margin-paragraph centered">
+      <a href="/dashboard" class="button primary">Get Started Free</a>
+      <a href="https://github.com/activeagents/activeagent" class="button tertiary">View Documentation</a>
+    </div>
+  </div>
+</section>
