@@ -28,9 +28,9 @@
   - Saturation controls how much of accent color will be mixed into text, background, and surface colors.
   - Contrast controls how contrast the text colors will be.
   */
-  --theme-hue: 255;
-  --theme-saturation: 0.2; /* 0...1 where 0 means grayscale colors; 1 means fully saturated colors */
-  --theme-contrast: 0.8; /* 0...1 where 0 means low contrast; 1 means high contrast, black-n-white in fact */
+  --theme-hue: 358; /* Active Agent red/coral */
+  --theme-saturation: 0.15; /* 0...1 where 0 means grayscale colors; 1 means fully saturated colors */
+  --theme-contrast: 0.85; /* 0...1 where 0 means low contrast; 1 means high contrast, black-n-white in fact */
 
   /* Fonts */
   --font-text: "Inter Variable", Arial, sans-serif;
@@ -86,18 +86,18 @@
   --color-text-primary: #363e48;
   --color-text-secondary: #757a7f;
   --color-text-tertiary: #a7acb2;
-  --color-accent: #0081ff;
-  --color-accent-hover: #0088f0d9;
-  --color-accent-b: #0081ff29;
-  --color-accent-b-hover: #0088f033;
+  --color-accent: #FA343B;
+  --color-accent-hover: #e02d33;
+  --color-accent-b: #FA343B29;
+  --color-accent-b-hover: #FA343B33;
   --color-on-accent: white;
   --color-border-level-2: #99a3ae29;
   --color-border-level-3: #99a3ae52;
   --color-background-blur: #ffffffe6;
-  --color-gradient-bg-start: #0081ff14;
-  --color-gradient-bg-end: #0081ff00;
-  --color-gradient-promo-start: #800069;
-  --color-gradient-promo-end: #005196;
+  --color-gradient-bg-start: #FA343B14;
+  --color-gradient-bg-end: #FA343B00;
+  --color-gradient-promo-start: #FA343B;
+  --color-gradient-promo-end: #c41e24;
 }
 
 .theme-light {
