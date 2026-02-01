@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" class="theme-dark">
+<html lang="en" class="theme-light">
 
 <head>
   <meta charset="utf-8" />
-  <title>Active Agent - AI Agent Framework for Rails</title>
-  <meta content="Build AI-powered agents for your Rails applications with Active Agent - the Ruby framework for intelligent automation" name="description" />
+  <title>Active Agent | The AI Framework For Ruby on Rails</title>
+  <meta content="Build AI in Rails - Now Agents are Controllers. The Ruby-native way to build AI features." name="description" />
   <meta content="width=device-width, initial-scale=1" name="viewport" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Active Agent" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:title" content="Active Agent - AI Agent Framework for Rails" />
-  <meta property="og:description" content="Build AI-powered agents for your Rails applications" />
+  <meta property="og:title" content="Active Agent | The AI Framework For Ruby on Rails" />
+  <meta property="og:description" content="Build AI in Rails - Now Agents are Controllers. Makes code tons of fun!" />
   <meta property="og:url" content="https://activeagents.ai" />
   <meta name="twitter:site" content="@activeagents" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Active Agent - AI Agent Framework for Rails" />
-  <meta name="twitter:description" content="Build AI-powered agents for your Rails applications" />
+  <meta name="twitter:title" content="Active Agent | The AI Framework For Ruby on Rails" />
+  <meta name="twitter:description" content="Build AI in Rails - Now Agents are Controllers." />
 
   <!-- Favicon and icons -->
-  <link rel="icon" href="/landing/images/favicon/favicon.ico" sizes="32x32" />
-  <link rel="icon" href="/landing/images/favicon/icon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/landing/images/favicon/apple-touch-icon.png" />
+  <link rel="icon" href="/landing/images/activeagent-logo.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/landing/images/activeagent-logo.png" />
 
   <!-- Preload fonts -->
   <link rel="preload" href="/landing/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
@@ -42,24 +41,28 @@
   <div class="background-gradient"></div>
   <div class="page-container">
     <header class="nav-container">
-      <a href="/" class="nav-brand">
-        <span style="font-size: 1.5rem; font-weight: 700; color: var(--color-accent);">Active Agent</span>
+      <a href="/" class="nav-brand" style="display: flex; align-items: center; gap: 8px;">
+        <img src="/landing/images/activeagent-logo.png" alt="Active Agent" style="height: 32px; width: 32px;" />
+        <span style="font-size: 1.25rem; font-weight: 600;">Active Agent</span>
       </a>
       <nav role="navigation" class="nav-menu" data-navigation>
+        <a href="https://docs.activeagents.ai" class="nav-link">Docs</a>
         <a href="#pricing" class="nav-link">Pricing</a>
-        <a href="https://github.com/activeagents/activeagent" class="nav-link">Docs</a>
         <a href="https://github.com/activeagents/activeagent" class="nav-link">GitHub</a>
         <div class="button-group stacked margin-top-l mobile-only">
           <a href="/dashboard" class="button tertiary">Sign In</a>
-          <a href="/dashboard" class="button primary">Get Started</a>
+          <a href="https://docs.activeagents.ai/getting-started" class="button primary">Getting Started</a>
         </div>
       </nav>
       <div class="button-group">
         <a href="https://github.com/activeagents/activeagent" class="button ghost compact hide-on-mobile">
           <div class="fa-brands fa-github icon l"></div>
         </a>
+        <a href="https://discord.gg/activeagent" class="button ghost compact hide-on-mobile">
+          <div class="fa-brands fa-discord icon l"></div>
+        </a>
         <a href="/dashboard" class="button tertiary compact hide-on-mobile">Sign In</a>
-        <a href="/dashboard" class="button primary compact">Get Started</a>
+        <a href="https://docs.activeagents.ai/getting-started" class="button primary compact">Getting Started</a>
         <button class="button ghost compact nav-hamburger" data-mobile-toggle aria-label="Show menu">
           <span class="fa-solid fa-bars icon m"></span>
         </button>
@@ -73,13 +76,13 @@
         <div>
           <p class="paragraph s">
             &copy; <%= Date.current.year %> Active Agent<br />
-            Built with Ruby on Rails
+            The AI Framework for Ruby on Rails
           </p>
         </div>
         <div>
           <div class="link-list">
+            <a href="https://docs.activeagents.ai" class="ui s">Documentation</a>
             <a href="#pricing" class="ui s">Pricing</a>
-            <a href="https://github.com/activeagents/activeagent" class="ui s" target="_blank">Documentation</a>
             <a href="https://github.com/activeagents/activeagent" class="ui s" target="_blank">GitHub</a>
           </div>
         </div>
@@ -89,9 +92,17 @@
               <div class="fa-brands fa-github icon m color-accent"></div>
               <div class="pseudo-link">GitHub</div>
             </a>
+            <a href="https://discord.gg/activeagent" class="icon-link ui s" target="_blank">
+              <div class="fa-brands fa-discord icon m color-accent"></div>
+              <div class="pseudo-link">Discord</div>
+            </a>
             <a href="https://x.com/activeagents" class="icon-link ui s" target="_blank">
               <div class="fa-brands fa-x-twitter icon m color-accent"></div>
-              <div class="pseudo-link">X.com</div>
+              <div class="pseudo-link">Twitter</div>
+            </a>
+            <a href="https://bsky.app/profile/activeagent.dev" class="icon-link ui s" target="_blank">
+              <div class="fa-brands fa-bluesky icon m color-accent"></div>
+              <div class="pseudo-link">Bluesky</div>
             </a>
           </div>
         </div>

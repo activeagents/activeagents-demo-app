@@ -1,99 +1,53 @@
 <section>
   <div class="heading hero centered">
-    <a href="https://github.com/activeagents/activeagent" class="eyebrow">Now Open Source!</a>
     <h1 class="balanced">
-      AI Agent Framework for Rails
+      <span class="color-accent">Active Agent</span><br />
+      Build AI in Rails
     </h1>
-    <p class="paragraph m secondary balanced">
-      Build intelligent, autonomous agents for your Rails applications. Active Agent brings the power of AI to your Ruby codebase with a familiar, Rails-native approach.
+    <p class="paragraph l secondary balanced">
+      Now Agents are Controllers<br />
+      Makes code tons of fun!
     </p>
     <div class="button-group margin-paragraph centered">
-      <a href="/dashboard" class="button primary">Get Started Free</a>
-      <a href="https://github.com/activeagents/activeagent" class="button tertiary">View on GitHub</a>
+      <a href="https://docs.activeagents.ai/getting-started" class="button primary">Getting Started</a>
+      <a href="https://docs.activeagents.ai" class="button tertiary">Docs</a>
+      <a href="https://github.com/activeagents/activeagent" class="button tertiary">GitHub</a>
     </div>
   </div>
-  <div class="image-wide">
-    <div class="card-code-block dark" style="max-width: 800px; margin: 0 auto;">
-      <pre class="shiki github-dark-default" style="margin: 0px; color: #e6edf3" tabindex="0"><code><span class="line"><span style="color:#8B949E"># app/agents/support_agent.rb</span></span>
-<span class="line"><span style="color:#FF7B72">class</span> <span style="color:#FFA657">SupportAgent</span> <span style="color:#FF7B72">&lt;</span> <span style="color:#FFA657">ActiveAgent::Base</span></span>
-<span class="line"><span style="color:#7EE787">  generate_with</span> <span style="color:#79C0FF">:openai</span><span style="color:#E6EDF3">,</span></span>
-<span class="line"><span style="color:#E6EDF3">    </span><span style="color:#79C0FF">model:</span> <span style="color:#A5D6FF">"gpt-4"</span><span style="color:#E6EDF3">,</span></span>
-<span class="line"><span style="color:#E6EDF3">    </span><span style="color:#79C0FF">temperature:</span> <span style="color:#79C0FF">0.7</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#FF7B72">  def</span> <span style="color:#FFA657">handle_inquiry</span><span style="color:#E6EDF3">(</span><span style="color:#FFA657">message</span><span style="color:#E6EDF3">)</span></span>
-<span class="line"><span style="color:#E6EDF3">    prompt </span><span style="color:#79C0FF">do</span> <span style="color:#E6EDF3">|</span><span style="color:#FFA657">p</span><span style="color:#E6EDF3">|</span></span>
-<span class="line"><span style="color:#E6EDF3">      p.</span><span style="color:#7EE787">system</span> <span style="color:#A5D6FF">"You are a helpful support agent."</span></span>
-<span class="line"><span style="color:#E6EDF3">      p.</span><span style="color:#7EE787">user</span> <span style="color:#FFA657">message</span></span>
-<span class="line"><span style="color:#FF7B72">    end</span></span>
-<span class="line"><span style="color:#FF7B72">  end</span></span>
-<span class="line"><span style="color:#FF7B72">end</span></span></code></pre>
-    </div>
+  <div style="display: flex; justify-content: center; margin-top: 2rem;">
+    <img src="/landing/images/activeagent-logo.png" alt="Active Agent" style="max-width: 280px; height: auto;" />
   </div>
 </section>
 
 <section>
   <div class="heading centered">
-    <h2 class="no-top-margin">Why Active Agent?</h2>
+    <h2 class="no-top-margin">Features</h2>
     <p class="paragraph m secondary">
-      Built by Rails developers, for Rails developers. Active Agent follows conventions you already know and love.
+      Everything you need to build AI-powered Rails applications
     </p>
   </div>
-  <div class="cards-with-icons-container">
-    <div class="card-with-icon horizontal">
-      <div class="fa-solid fa-gem icon xl color-accent"></div>
-      <div class="feature-heading">
-        <p class="paragraph m bold">Rails Native</p>
-        <p class="paragraph m secondary">
-          Follows Rails conventions with generators, callbacks, and a familiar DSL. If you know Rails, you know Active Agent.
-        </p>
-      </div>
-    </div>
-    <div class="card-with-icon horizontal">
-      <div class="fa-solid fa-robot icon xl color-accent"></div>
-      <div class="feature-heading">
-        <p class="paragraph m bold">Multi-Provider Support</p>
-        <p class="paragraph m secondary">
-          Works with OpenAI, Anthropic, and other LLM providers. Switch providers without changing your agent code.
-        </p>
-      </div>
-    </div>
-    <div class="card-with-icon horizontal">
-      <div class="fa-solid fa-bolt icon xl color-accent"></div>
-      <div class="feature-heading">
-        <p class="paragraph m bold">Production Ready</p>
-        <p class="paragraph m secondary">
-          Built-in streaming, tool calling, and context management. Deploy with confidence to production environments.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="heading">
-    <h2 class="no-top-margin">Powerful Features</h2>
-    <p class="paragraph m secondary">
-      Everything you need to build intelligent agents that can reason, use tools, and interact with your Rails application.
-    </p>
-  </div>
-  <div class="grid columns-2">
+  <div class="grid columns-3">
     <div class="feature-card">
       <div class="feature-heading">
-        <h3 class="color-accent no-top-margin">
-          Tool Calling
-        </h3>
+        <h3 class="color-accent no-top-margin">Agents</h3>
         <p class="paragraph s secondary">
-          Define tools as Ruby methods and let your agents call them automatically. Full integration with your Rails models and services.
+          Controllers for AI. Define actions, use callbacks, render views. Rails conventions for LLM interactions.
         </p>
       </div>
     </div>
     <div class="feature-card">
       <div class="feature-heading">
-        <h3 class="color-accent no-top-margin">
-          Streaming Responses
-        </h3>
+        <h3 class="color-accent no-top-margin">Tool Calling</h3>
         <p class="paragraph s secondary">
-          Real-time streaming support for responsive user experiences. Works seamlessly with Turbo Streams and Action Cable.
+          AI calls Ruby methods to fetch data and make decisions. Works like RPC for agents.
+        </p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-heading">
+        <h3 class="color-accent no-top-margin">Structured Output</h3>
+        <p class="paragraph s secondary">
+          Extract typed data with JSON schemas. Validated responses for forms and APIs.
         </p>
       </div>
     </div>
@@ -101,31 +55,51 @@
   <div class="grid columns-3">
     <div class="feature-card">
       <div class="feature-heading">
-        <h3 class="color-accent no-top-margin">
-          Context Management
-        </h3>
+        <h3 class="color-accent no-top-margin">Providers</h3>
         <p class="paragraph s secondary">
-          Automatic conversation history and context windowing. Keep your agents informed without token bloat.
+          OpenAI, Anthropic, Ollama, OpenRouter. Switch providers with one line of code.
         </p>
       </div>
     </div>
     <div class="feature-card">
       <div class="feature-heading">
-        <h3 class="color-accent no-top-margin">
-          Callbacks & Hooks
-        </h3>
+        <h3 class="color-accent no-top-margin">Streaming</h3>
         <p class="paragraph s secondary">
-          Before and after callbacks for prompts and generations. Full control over the agent lifecycle.
+          Real-time response streaming with callbacks for dynamic UIs and live updates.
         </p>
       </div>
     </div>
     <div class="feature-card">
       <div class="feature-heading">
-        <h3 class="color-accent no-top-margin">
-          Background Jobs
-        </h3>
+        <h3 class="color-accent no-top-margin">Embeddings</h3>
         <p class="paragraph s secondary">
-          Queue agent tasks with Active Job. Long-running generations won't block your request cycle.
+          Generate vectors for semantic search, RAG, and clustering applications.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="grid columns-3">
+    <div class="feature-card">
+      <div class="feature-heading">
+        <h3 class="color-accent no-top-margin">Testing</h3>
+        <p class="paragraph s secondary">
+          Test with fixtures and VCR cassettes. Mock providers for fast tests.
+        </p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-heading">
+        <h3 class="color-accent no-top-margin">Background Jobs</h3>
+        <p class="paragraph s secondary">
+          Process generations async with Active Job. Scale AI operations in the background.
+        </p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-heading">
+        <h3 class="color-accent no-top-margin">Error Handling</h3>
+        <p class="paragraph s secondary">
+          Automatic retries with exponential backoff. Graceful degradation for production.
         </p>
       </div>
     </div>
@@ -281,7 +255,7 @@
       </summary>
       <div class="accordion-content">
         <p>
-          Active Agent supports OpenAI, Anthropic (Claude), and other providers. You can also create custom providers for any API-compatible service.
+          Active Agent supports OpenAI, Anthropic, Ollama, and OpenRouter. Switch providers with one line of code.
         </p>
       </div>
     </details>
@@ -326,10 +300,10 @@
 
 <section class="promo-cta">
   <div class="heading centered">
-    <h2>Start Building Intelligent Agents Today</h2>
+    <h2>Ready to build AI products in Rails?</h2>
     <div class="button-group margin-paragraph centered">
-      <a href="/dashboard" class="button primary">Get Started Free</a>
-      <a href="https://github.com/activeagents/activeagent" class="button tertiary">View Documentation</a>
+      <a href="https://docs.activeagents.ai/getting-started" class="button primary">Getting Started</a>
+      <a href="https://docs.activeagents.ai" class="button tertiary">View Documentation</a>
     </div>
   </div>
 </section>
